@@ -4,4 +4,4 @@
 | ------------------------------- |  ----------- |
 | Lluis Pujalte Feliu de Cabrera  |  @llpfdc     | 
 | Eric Pérez Ibáñez               |  @   | 
-| Sergio Guerrero Rivero          |  @    | 
+| Sergio Guerrero Rivero          |  @sergioguri00    | 
