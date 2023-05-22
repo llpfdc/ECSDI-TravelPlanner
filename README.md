@@ -1,6 +1,6 @@
 # ECSDI-TravelPlanner
 
-| Nom                             |  Git User    |
+| Name                             |  Git User    |
 | ------------------------------- |  ----------- |
 | Lluis Pujalte Feliu de Cabrera  |  @llpfdc     | 
 | Eric Pérez Ibáñez               |  @ericpereziban   | 
