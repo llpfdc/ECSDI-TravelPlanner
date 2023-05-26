@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Travel Planner</title>
+</head>
+<body>
+<h1 class="d-flex justify-content-center">Show us your restrictions</h1>
+<div class="d-flex justify-content-center">
+    <form method="post">
+        <div class="form-group">
+            <label for="origin">Origin</label>
+            <input class="form-control" type="text" name="origin" id="origin" placeholder="ex: BCN" required>
+        </div>
+        <div class="form-group">
+            <label for="destination">Destination</label>
+            <input class="form-control" type="text" name="destination" id="destination" placeholder="ex: PMI" required>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input class="form-control" type="number" name="price" id="price"  min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="outboundDate">Outbound date:</label>
+            <input type="date" class="form-control" name="outboundDate" id="outboundDate" required>
+        </div>
+
+        <div class="form-group">
+            <label for="returnDate">Return date:</label>
+            <input type="date" class="form-control"  name="returnDate" id="returnDate" required>
+        </div>
+        <div class="form-group">
+            <select  name="rangePlayful" id="rangePlayful" class="custom-select custom-select-sm" required>
+                <option selected>How playful do you want your plan?</option>
+                <option value="1">Nothing</option>
+                <option value="2">Some</option>
+                <option value="3">Quite</option>
+                <option value="4">A lot</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <select name="rangeFestive" id="rangeFestive" class="custom-select custom-select-sm" required>
+                <option selected>How festive do you want your plan?</option>
+                <option value="1">Nothing</option>
+                <option value="2">Some</option>
+                <option value="3">Quite</option>
+                <option value="4">A lot</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <select name="rangeCultural" id="rangeCultural" class="custom-select custom-select-sm" required>
+                <option selected>How cultural do you want your plan?</option>
+                <option value="1">Nothing</option>
+                <option value="2">Some</option>
+                <option value="3">Quite</option>
+                <option value="4">A lot</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+</body>
+</html>
