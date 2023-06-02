@@ -51,6 +51,11 @@ AgentFlightSelector = Agent('AgentFlightSelector',
                             'http://%s:9011/comm' % hostname,
                             'http://%s:9011/Stop' % hostname)
 
+AgentHotelSelector = Agent('AgentHotelSelector',
+                       agn.AgentHotelSelector,
+                            'http://%s:9014/comm' % hostname,
+                            'http://%s:9014/Stop' % hostname)
+
 # Directory agent address
 DirectoryAgent = Agent('DirectoryAgent',
                        agn.Directory,
@@ -124,11 +129,14 @@ def SearchPlan():
         price = request.form['price']
         outboundDate = request.form['outboundDate']
         returnDate = request.form['returnDate']
-        rangePlayful= request.form['rangePlayful']
-        rangeFestive= request.form['rangeFestive']
-        rangeCultural= request.form['rangeCultural']
+        central = request.form['rangeCentral']
+        rangePlayful = request.form['rangePlayful']
+        rangeFestive = request.form['rangeFestive']
+        rangeCultural = request.form['rangeCultural']
+
 
         plan = search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural)
+        hotel = search_hotel(destination, price, outboundDate, returnDate, central)
         return render_template('plan.html',
                                flight_price_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.Price)),
                                flight_arrival_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.ArrivalTime)),
@@ -137,6 +145,11 @@ def SearchPlan():
                                flight_price_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.Price)),
                                flight_arrival_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.ArrivalTime)),
                                flight_departure_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.DepartureTime)),
+
+                               hotel_name=str(hotel.value(subject=ONTO['Hotel'],predicate=ONTO.HotelName)),
+                               hotel_checkin=str(hotel.value(subject=ONTO['Hotel'],predicate = ONTO.CheckInDate)),
+                               hotel_checkout=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.CheckOutDate)),
+                               hotel_price=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelPrice)),
                                )
 
 def search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural) :
@@ -195,6 +208,45 @@ def search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,ra
     resp = send_message(msg, AgentFlightSelector.address)
     return resp
 
+def search_hotel(city, price, checkInDate, checkOutDate, central):
+    global mss_cnt
+
+    g = Graph()
+
+    action = ONTO['SearchHotel_' + str(mss_cnt)]
+    g.add((action, RDF.type, ONTO.SearchHotel))
+
+    if city:
+        cityRestriction = ONTO['CityRestriction_' + str(mss_cnt)]
+        g.add((cityRestriction, RDF.type, ONTO.CityRestriction))
+        g.add((cityRestriction, ONTO.City, Literal(city)))
+        g.add((action, ONTO.RestrictedBy, URIRef(cityRestriction)))
+    if price:
+        priceRestriction = ONTO['PriceRestriction_' + str(mss_cnt)]
+        g.add((priceRestriction, RDF.type, ONTO.PriceRestriction))
+        g.add((priceRestriction, ONTO.Price, Literal(price)))
+        g.add((action, ONTO.RestrictedBy, URIRef(priceRestriction)))
+    if checkInDate:
+        checkInDateRestriction = ONTO['CheckInDateRestriction_' + str(mss_cnt)]
+        g.add((checkInDateRestriction, RDF.type, ONTO.CheckInDateRestriction))
+        g.add((checkInDateRestriction, ONTO.CheckInDate, Literal(checkInDate)))
+        g.add((action, ONTO.RestrictedBy, URIRef(checkInDateRestriction)))
+    if checkOutDate:
+        checkOutDateRestriction = ONTO['CheckOutDateRestriction_' + str(mss_cnt)]
+        g.add((checkOutDateRestriction, RDF.type, ONTO.CheckOutDateRestriction))
+        g.add((checkOutDateRestriction, ONTO.CheckOutDate, Literal(checkOutDate)))
+        g.add((action, ONTO.RestrictedBy, URIRef(checkOutDateRestriction)))
+    if central:
+        centralRestriction = ONTO['CentralRestriction_' + str(mss_cnt)]
+        g.add((centralRestriction, RDF.type, ONTO.CentralRestriction))
+        g.add((centralRestriction, ONTO.Central, Literal(central)))
+        g.add((action, ONTO.RestrictedBy, URIRef(centralRestriction)))
+
+    msg = build_message(g, ACL.request, AgentConsultor.uri, AgentHotelSelector.uri, action, mss_cnt)
+    mss_cnt += 1
+    print(msg)
+    resp = send_message(msg, AgentHotelSelector.address)
+    return resp
 
 def tidyup():
     """
