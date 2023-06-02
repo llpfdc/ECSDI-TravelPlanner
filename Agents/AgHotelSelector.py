@@ -91,16 +91,16 @@ def comunicacion():
 
                 for restriction in restrictions:
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.CityRestriction:
-                        city = g.value(subject=restriction,predicate=ONTO.CityRestriction)
+                        city = g.value(subject=restriction,predicate=ONTO.City)
                         restrictionsDict['city'] = city
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.PriceRestriction:
                         price = g.value(subject=restriction,predicate=ONTO.Price)
                         restrictionsDict['price'] = price
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.CheckInDateRestriction:
-                        checkindate = g.value(subject=restriction,predicate=ONTO.CheckInDateRestriction)
+                        checkindate = g.value(subject=restriction,predicate=ONTO.CheckInDate)
                         restrictionsDict['checkindate'] = checkindate
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.CheckOutDateRestriction:
-                        checkoutdate = g.value(subject=restriction,predicate=ONTO.CheckOutDateRestriction)
+                        checkoutdate = g.value(subject=restriction,predicate=ONTO.CheckOutDate)
                         restrictionsDict['checkoutdate'] = checkoutdate
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.CentralRestriction:
                         central = g.value(subject=restriction,predicate=ONTO.Central)

@@ -134,14 +134,11 @@ def get_checkInDate(data, hotel):
 def get_checkOutDate(data, hotel):
   return data["data"][hotel[0]]["offers"][hotel[1]]["checkOutDate"]
 
-def get_number_beds(data, hotel):
-  return data["data"][hotel[0]]["offers"][hotel[1]]["room"]["typeEstimated"]["beds"]
+def get_hotel_latitude(data, hotel):
+  return data["data"][hotel[0]]["hotel"]["latitude"]
 
-def get_bedType(data, hotel):
-  return data["data"][hotel[0]]["offers"][hotel[1]]["room"]["typeEstimated"]["bedType"]
-
-def get_number_adults(data, hotel):
-  return data["data"][hotel[0]]["offers"][hotel[1]]["guests"]["adults"]
+def get_hotel_longitude(data, hotel):
+  return data["data"][hotel[0]]["hotel"]["longitude"]
 
 def get_price(data, hotel):
   return data["data"][hotel[0]]["offers"][hotel[1]]["price"]["total"]
@@ -176,16 +173,16 @@ def comunicacion():
                 restrictionsDict = {}
                 for restriction in restrictions:
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.CityRestriction:
-                        city = g.value(subject=restriction,predicate=ONTO.CityRestriction)
+                        city = g.value(subject=restriction,predicate=ONTO.City)
                         restrictionsDict['city'] = city
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.PriceRestriction:
                         price = g.value(subject=restriction,predicate=ONTO.Price)
                         restrictionsDict['price'] = price
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.CheckInDateRestriction:
-                        checkindate = g.value(subject=restriction,predicate=ONTO.CheckInDateRestriction)
+                        checkindate = g.value(subject=restriction,predicate=ONTO.CheckInDate)
                         restrictionsDict['checkindate'] = checkindate
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.CheckOutDateRestriction:
-                        checkoutdate = g.value(subject=restriction,predicate=ONTO.CheckOutDateRestriction)
+                        checkoutdate = g.value(subject=restriction,predicate=ONTO.CheckOutDate)
                         restrictionsDict['checkoutdate'] = checkoutdate
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.CentralRestriction:
                         central = g.value(subject=restriction,predicate=ONTO.Central)
@@ -209,7 +206,8 @@ def comunicacion():
                 result_graph.add((hotel_subj, ONTO.CheckInDate, Literal(get_checkInDate(hotels, hotel))))
                 result_graph.add((hotel_subj, ONTO.CheckOutDate, Literal(get_checkOutDate(hotels, hotel))))
                 result_graph.add((hotel_subj, ONTO.HotelPrice, Literal(get_price(hotels, hotel))))
-
+                result_graph.add((hotel_subj, ONTO.HotelLatitude, Literal(get_hotel_latitude(hotels, hotel))))
+                result_graph.add((hotel_subj, ONTO.HotelLongitude, Literal(get_hotel_longitude(hotels, hotel))))
                 return result_graph.serialize(format='xml'), 200
 
 @app.route("/Stop")
