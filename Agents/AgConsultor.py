@@ -142,7 +142,9 @@ def SearchPlan():
 
         plan = search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural)
         hotel = search_hotel(destination, price, outboundDate, returnDate, central)
-        activities = search_activities(outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural)
+        hotel_latitude = hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelLatitude)
+        hotel_longitude = hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelLongitude)
+        activities = search_activities(outboundDate,returnDate,hotel_latitude, hotel_longitude, rangePlayful, rangeFestive, rangeCultural)
         return render_template('plan.html',
                                flight_price_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.Price)),
                                flight_arrival_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.ArrivalTime)),

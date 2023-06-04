@@ -153,12 +153,12 @@ def find_activities(hotel_latitude,hotel_longitude, outbound, returnDate, rangeP
       if (len(cultural) - 1 >= i):
           day.append(cultural[i])
       else:
-          day.append(playfull[days - 1 + (i - len(cultural) + 1)])
+          day.append(playful[days - 1 + (i - len(cultural) + 1)])
       day.append(restaurants[i])
-      if (len(playfull) - 1 >= i):
-          day.append(playfull[i])
+      if (len(playful) - 1 >= i):
+          day.append(playful[i])
       else:
-          day.append(cultural[days - 1 + (i - len(playfull) + 1)])
+          day.append(cultural[days - 1 + (i - len(playful) + 1)])
       if (len(festival) - 1 >= i):
           day.append(festival[i])
       else:
@@ -198,11 +198,11 @@ def comunicacion():
                 restrictions = g.objects(content,ONTO.RestrictedBy)
                 restrictionsDict = {}
                 for restriction in restrictions:
-                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.HotelLatitudeRestriction:
-                        hotel_latitude = g.value(subject=restriction, predicate=ONTO.hotel_latitude)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.HotelLatitude:
+                        hotel_latitude = g.value(subject=restriction, predicate=ONTO.HotelLatitude)
                         restrictionsDict['hotel_latitude'] = hotel_latitude
-                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.HotelLongitudeRestriction:
-                        hotel_longitude = g.value(subject=restriction, predicate=ONTO.hotel_longitude)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.HotelLongitude:
+                        hotel_longitude = g.value(subject=restriction, predicate=ONTO.HotelLongitude)
                         restrictionsDict['hotel_longitude'] = hotel_longitude
                     if g.value(subject=restriction, predicate=RDF.type) == ONTO.PlayfulRestriction:
                         rangePlayful = g.value(subject=restriction, predicate=ONTO.rangePlayful)

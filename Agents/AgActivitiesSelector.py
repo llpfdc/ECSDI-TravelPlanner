@@ -90,11 +90,11 @@ def comunicacion():
                 restrictionsDict = {}
 
                 for restriction in restrictions:
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.HotelLatitudeRestriction:
-                        hotel_latitude= g.value(subject=restriction,predicate=ONTO.hotel_latitude)
+                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.HotelLatitude:
+                        hotel_latitude= g.value(subject=restriction,predicate=ONTO.HotelLatitude)
                         restrictionsDict['hotel_latitude'] = hotel_latitude
-                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.HotelLongitudeRestriction:
-                        hotel_longitude = g.value(subject=restriction, predicate=ONTO.hotel_longitude)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.HotelLongitude:
+                        hotel_longitude = g.value(subject=restriction, predicate=ONTO.HotelLongitude)
                         restrictionsDict['hotel_longitude'] = hotel_longitude
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.PlayfulRestriction:
                         rangePlayful = g.value(subject=restriction,predicate=ONTO.rangePlayful)
