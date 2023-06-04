@@ -56,6 +56,11 @@ AgentHotelSelector = Agent('AgentHotelSelector',
                             'http://%s:9014/comm' % hostname,
                             'http://%s:9014/Stop' % hostname)
 
+AgentActivitiesSelector = Agent('AgentActivitiesSelector',
+                       agn.AgentActivitiesSelector,
+                            'http://%s:9031/comm' % hostname,
+                            'http://%s:9031/Stop' % hostname)
+
 # Directory agent address
 DirectoryAgent = Agent('DirectoryAgent',
                        agn.Directory,
@@ -137,6 +142,7 @@ def SearchPlan():
 
         plan = search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural)
         hotel = search_hotel(destination, price, outboundDate, returnDate, central)
+        activities = search_activities(outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural)
         return render_template('plan.html',
                                flight_price_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.Price)),
                                flight_arrival_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.ArrivalTime)),
@@ -150,6 +156,7 @@ def SearchPlan():
                                hotel_checkin=str(hotel.value(subject=ONTO['Hotel'],predicate = ONTO.CheckInDate)),
                                hotel_checkout=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.CheckOutDate)),
                                hotel_price=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelPrice)),
+                               activities = str(activities)
                                )
 
 def search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural) :
@@ -246,6 +253,46 @@ def search_hotel(city, price, checkInDate, checkOutDate, central):
     mss_cnt += 1
     print(msg)
     resp = send_message(msg, AgentHotelSelector.address)
+    return resp
+
+def search_activities(outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural):
+    global mss_cnt
+
+    g = Graph()
+
+    action = ONTO['SearchActivities_' + str(mss_cnt)]
+    g.add((action, RDF.type, ONTO.SearchActivities))
+
+    if outboundDate:
+        outboundRestriction = ONTO['OutboundRestriction_' + str(mss_cnt)]
+        g.add((outboundRestriction, RDF.type, ONTO.OutboundRestriction))
+        g.add((outboundRestriction, ONTO.Outbound, Literal(outboundDate)))
+        g.add((action, ONTO.RestrictedBy, URIRef(outboundRestriction)))
+    if returnDate:
+        returnRestriction = ONTO['ReturnRestriction_' + str(mss_cnt)]
+        g.add((returnRestriction, RDF.type, ONTO.ReturnRestriction))
+        g.add((returnRestriction, ONTO.Return, Literal(returnDate)))
+        g.add((action, ONTO.RestrictedBy, URIRef(returnRestriction)))
+    if rangePlayful:
+        playfulRestriction = ONTO['PlayfulRestriction_' + str(mss_cnt)]
+        g.add((playfulRestriction, RDF.type, ONTO.PlayfulRestriction))
+        g.add((playfulRestriction, ONTO.Playful, Literal(rangePlayful)))
+        g.add((action, ONTO.RestrictedBy, URIRef(playfulRestriction)))
+    if rangeFestive:
+        festiveRestriction = ONTO['FestiveRestriction_' + str(mss_cnt)]
+        g.add((festiveRestriction, RDF.type, ONTO.FestiveRestriction))
+        g.add((festiveRestriction, ONTO.Festive, Literal(rangeFestive)))
+        g.add((action, ONTO.RestrictedBy, URIRef(festiveRestriction)))
+    if rangeCultural:
+        culturalRestriction = ONTO['CulturalRestriction_' + str(mss_cnt)]
+        g.add((culturalRestriction, RDF.type, ONTO.CulturalRestriction))
+        g.add((culturalRestriction, ONTO.Festive, Literal(rangeCultural)))
+        g.add((action, ONTO.RestrictedBy, URIRef(culturalRestriction)))
+
+    msg = build_message(g, ACL.request, AgentConsultor.uri, AgentActivitiesSelector.uri, action, mss_cnt)
+    mss_cnt += 1
+    print(msg)
+    resp = send_message(msg, AgentActivitiesSelector.address)
     return resp
 
 def tidyup():
