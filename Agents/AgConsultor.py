@@ -144,7 +144,7 @@ def SearchPlan():
         hotel = search_hotel(destination, price, outboundDate, returnDate, central)
         hotel_latitude = hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelLatitude)
         hotel_longitude = hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelLongitude)
-        activities = search_activities(outboundDate,returnDate,hotel_latitude, hotel_longitude, rangePlayful, rangeFestive, rangeCultural)
+        activities = search_activities(outboundDate, returnDate, hotel_latitude, hotel_longitude, rangePlayful, rangeFestive, rangeCultural)
         return render_template('plan.html',
                                flight_price_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.Price)),
                                flight_arrival_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.ArrivalTime)),
@@ -158,7 +158,7 @@ def SearchPlan():
                                hotel_checkin=str(hotel.value(subject=ONTO['Hotel'],predicate = ONTO.CheckInDate)),
                                hotel_checkout=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.CheckOutDate)),
                                hotel_price=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelPrice)),
-                               activities = str(activities)
+                               activities=str(activities)
                                )
 
 def search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural) :
@@ -257,7 +257,7 @@ def search_hotel(city, price, checkInDate, checkOutDate, central):
     resp = send_message(msg, AgentHotelSelector.address)
     return resp
 
-def search_activities(outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural):
+def search_activities(outboundDate, returnDate, hotel_latitude, hotel_longitude, rangePlayful, rangeFestive, rangeCultural):
     global mss_cnt
 
     g = Graph()
@@ -275,6 +275,16 @@ def search_activities(outboundDate,returnDate,rangePlayful,rangeFestive,rangeCul
         g.add((returnRestriction, RDF.type, ONTO.ReturnRestriction))
         g.add((returnRestriction, ONTO.Return, Literal(returnDate)))
         g.add((action, ONTO.RestrictedBy, URIRef(returnRestriction)))
+    if hotel_latitude:
+        HotelLatitude = ONTO['HotelLatitude_' + str(mss_cnt)]
+        g.add((HotelLatitude, RDF.type, ONTO.HotelLatitude))
+        g.add((HotelLatitude, ONTO.HotelLatitude, Literal(hotel_latitude)))
+        g.add((action, ONTO.RestrictedBy, URIRef(HotelLatitude)))
+    if hotel_longitude:
+        HotelLongitude = ONTO['HotelLongitude_' + str(mss_cnt)]
+        g.add((HotelLongitude, RDF.type, ONTO.HotelLongitude))
+        g.add((HotelLongitude, ONTO.HotelLongitude, Literal(hotel_longitude)))
+        g.add((action, ONTO.RestrictedBy, URIRef(HotelLongitude)))
     if rangePlayful:
         playfulRestriction = ONTO['PlayfulRestriction_' + str(mss_cnt)]
         g.add((playfulRestriction, RDF.type, ONTO.PlayfulRestriction))

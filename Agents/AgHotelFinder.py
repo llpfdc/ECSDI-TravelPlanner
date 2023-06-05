@@ -61,7 +61,7 @@ def get_msg_count():
 def find_hotels(cityCode, radius):
   url = "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city"
   headers = {
-      "Authorization": "Bearer " + ACCES_TOKEN
+      "Authorization": "Bearer " + get_acces_token()
   }
   params = {
       "cityCode": cityCode,
@@ -75,7 +75,7 @@ def find_hotels(cityCode, radius):
 def find_best_hotels(hotelIds, checkInDate, checkOutDate, priceRange):
   url = "https://test.api.amadeus.com/v3/shopping/hotel-offers"
   headers = {
-      "Authorization": "Bearer " + ACCES_TOKEN
+      "Authorization": "Bearer " + get_acces_token()
   }
   params = {
       "hotelIds": hotelIds,
