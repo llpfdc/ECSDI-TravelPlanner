@@ -90,6 +90,9 @@ def comunicacion():
                 restrictionsDict = {}
                 print(restrictions)
                 for restriction in restrictions:
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.CityRestriction:
+                        city = g.value(subject=restriction, predicate=ONTO.City)
+                        restrictionsDict['city'] = city
                     if g.value(subject=restriction, predicate=RDF.type) == ONTO.PlayfulRestriction:
                         rangePlayful = g.value(subject=restriction, predicate=ONTO.Playful)
                         restrictionsDict['rangePlayful'] = rangePlayful

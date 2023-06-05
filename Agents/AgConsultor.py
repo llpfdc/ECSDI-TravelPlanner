@@ -143,7 +143,7 @@ def SearchPlan():
     try:
         plan = search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural)
         hotel = search_hotel(destination, price, outboundDate, returnDate, central)
-        activities_searched = search_activities(outboundDate, returnDate, rangePlayful, rangeFestive, rangeCultural)
+        activities_searched = search_activities(destination, outboundDate, returnDate, rangePlayful, rangeFestive, rangeCultural)
         res_activities = str(activities_searched.value(subject=ONTO['Activities'], predicate=ONTO.Activities))
         html_activities = json.loads(res_activities)
         return render_template('plan.html',
@@ -159,6 +159,7 @@ def SearchPlan():
                                hotel_checkin=str(hotel.value(subject=ONTO['Hotel'],predicate = ONTO.CheckInDate)),
                                hotel_checkout=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.CheckOutDate)),
                                hotel_price=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelPrice)),
+
                                activities = html_activities
                                )
     except Exception as e:
@@ -260,7 +261,7 @@ def search_hotel(city, price, checkInDate, checkOutDate, central):
     resp = send_message(msg, AgentHotelSelector.address)
     return resp
 
-def search_activities(outboundDate, returnDate, rangePlayful, rangeFestive, rangeCultural):
+def search_activities(city, outboundDate, returnDate, rangePlayful, rangeFestive, rangeCultural):
     global mss_cnt
 
     g = Graph()
@@ -268,6 +269,11 @@ def search_activities(outboundDate, returnDate, rangePlayful, rangeFestive, rang
     action = ONTO['SearchActivities_' + str(mss_cnt)]
     g.add((action, RDF.type, ONTO.SearchActivities))
 
+    if city:
+        cityRestriction = ONTO['CityRestriction_' + str(mss_cnt)]
+        g.add((cityRestriction, RDF.type, ONTO.CityRestriction))
+        g.add((cityRestriction, ONTO.City, Literal(city)))
+        g.add((action, ONTO.RestrictedBy, URIRef(cityRestriction)))
     if outboundDate:
         outboundRestriction = ONTO['OutboundRestriction_' + str(mss_cnt)]
         g.add((outboundRestriction, RDF.type, ONTO.OutboundRestriction))

@@ -61,7 +61,7 @@ def get_msg_count():
     global mss_cnt
     mss_cnt += 1
     return mss_cnt
-def find_activities(outbound, returnDate, rangePlayful, rangeFestive, rangeCultural):
+def find_activities(city, outbound, returnDate, rangePlayful, rangeFestive, rangeCultural):
   suma = int(rangePlayful) + int(rangeCultural)
   outbound_date = datetime.strptime(outbound, "%Y-%m-%d").date()
   return_date = datetime.strptime(returnDate, "%Y-%m-%d").date()
@@ -70,34 +70,50 @@ def find_activities(outbound, returnDate, rangePlayful, rangeFestive, rangeCultu
   res_culture = round(days * 2 * (int(rangeCultural) / suma))
   res_festive = round((int(rangeFestive) / 3) * days)
   rest = days + (days - int(rangeFestive))
+  city = str(city)
+  if city=="BCN": city = "Barcelona"
+  if city=="BER": city = "Berlin"
+  if city=="DFW": city = "Dallas"
+  if city=="LON": city = "London"
+  if city=="NYC": city = "New York"
+  if city=="PAR": city = "Paris"
+  if city=="SFO": city = "San Fra"
 
-  hotel_latitude = 41.3837315
-  hotel_longitude = 2.169104
-  url = "https://test.api.amadeus.com/v1/reference-data/locations/pois"
+  url = "https://test.api.amadeus.com/v1/reference-data/locations/cities"
   headers = {
       "Authorization": "Bearer " + get_acces_token_flight()
   }
+  params = {
+      "keyword": city,
+      "max": 1
+  }
+  response = requests.get(url, headers=headers, params=params)
+  response_data = json.loads(response.text)
+  latitude = response_data['data'][0]['geoCode']['latitude']
+  longitude = response_data['data'][0]['geoCode']['longitude']
+
+  url = "https://test.api.amadeus.com/v1/reference-data/locations/pois"
   paramsCultural = {
-      "latitude": hotel_latitude,
-      "longitude": hotel_longitude,
+      "latitude": latitude,
+      "longitude": longitude,
       "radius": 5,
       "categories": 'SIGHTS'
   }
   paramsPlayful = {
-      "latitude": hotel_latitude,
-      "longitude": hotel_longitude,
+      "latitude": latitude,
+      "longitude": longitude,
       "radius": 5,
       "categories": 'SHOPPING'
   }
   paramsFestival = {
-      "latitude": hotel_latitude,
-      "longitude": hotel_longitude,
+      "latitude": latitude,
+      "longitude": longitude,
       "radius": 5,
       "categories": 'NIGHTLIFE'
   }
   paramsRestaurant = {
-      "latitude": hotel_latitude,
-      "longitude": hotel_longitude,
+      "latitude": latitude,
+      "longitude": longitude,
       "radius": 5,
       "categories": 'RESTAURANT'
   }
@@ -207,23 +223,26 @@ def comunicacion():
                 print(restrictions)
                 restrictionsDict = {}
                 for restriction in restrictions:
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.PlayfulRestriction:
-                        rangePlayful = g.value(subject=restriction,predicate=ONTO.Playful)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.CityRestriction:
+                        city = g.value(subject=restriction, predicate=ONTO.City)
+                        restrictionsDict['city'] = city
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.PlayfulRestriction:
+                        rangePlayful = g.value(subject=restriction, predicate=ONTO.Playful)
                         restrictionsDict['rangePlayful'] = rangePlayful
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.FestiveRestriction:
-                        rangeFestive = g.value(subject=restriction,predicate=ONTO.Festive)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.FestiveRestriction:
+                        rangeFestive = g.value(subject=restriction, predicate=ONTO.Festive)
                         restrictionsDict['rangeFestive'] = rangeFestive
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.CulturalRestriction:
-                        rangeCultural = g.value(subject=restriction,predicate=ONTO.Cultural)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.CulturalRestriction:
+                        rangeCultural = g.value(subject=restriction, predicate=ONTO.Cultural)
                         restrictionsDict['rangeCultural'] = rangeCultural
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.OutboundRestriction:
-                        outbound = g.value(subject=restriction,predicate=ONTO.Outbound)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.OutboundRestriction:
+                        outbound = g.value(subject=restriction, predicate=ONTO.Outbound)
                         restrictionsDict['outbound'] = outbound
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.ReturnRestriction:
-                        returnDate = g.value(subject=restriction,predicate=ONTO.Return)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.ReturnRestriction:
+                        returnDate = g.value(subject=restriction, predicate=ONTO.Return)
                         restrictionsDict['return'] = returnDate
                 print(restrictionsDict)
-                results = find_activities(restrictionsDict['outbound'], restrictionsDict['return'], restrictionsDict['rangePlayful'], restrictionsDict['rangeFestive'], restrictionsDict['rangeCultural'])
+                results = find_activities(restrictionsDict['city'], restrictionsDict['outbound'], restrictionsDict['return'], restrictionsDict['rangePlayful'], restrictionsDict['rangeFestive'], restrictionsDict['rangeCultural'])
                 result_graph = Graph()
                 activities_subj = ONTO['Activities']
                 result_graph.add((activities_subj, RDF.type, ONTO.Activities))

@@ -12,11 +12,27 @@
     <form method="post">
         <div class="form-group">
             <label for="origin">Origin</label>
-            <input class="form-control" type="text" name="origin" id="origin" placeholder="ex: BCN" required>
+            <select name="origin">
+              <option value="BCN" selected>Barcelona</option>
+              <option value="BER">Berlin</option>
+              <option value="DFW">Dallas</option>
+              <option value="LON">London</option>
+              <option value="NYC">New York</option>
+              <option value="PAR">Paris</option>
+              <option value="SFO">San Francisco</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="destination">Destination</label>
-            <input class="form-control" type="text" name="destination" id="destination" placeholder="ex: PMI" required>
+            <select name="destination">
+              <option value="BCN">Barcelona</option>
+              <option value="BER">Berlin</option>
+              <option value="DFW">Dallas</option>
+              <option value="LON" selected>London</option>
+              <option value="NYC">New York</option>
+              <option value="PAR">Paris</option>
+              <option value="SFO">San Francisco</option>
+            </select>
         </div>
 
         <div class="form-group">
