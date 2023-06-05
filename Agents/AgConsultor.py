@@ -140,7 +140,7 @@ def SearchPlan():
         rangeFestive = request.form['rangeFestive']
         rangeCultural = request.form['rangeCultural']
 
-
+    try:
         plan = search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural)
         hotel = search_hotel(destination, price, outboundDate, returnDate, central)
         activities_searched = search_activities(outboundDate, returnDate, rangePlayful, rangeFestive, rangeCultural)
@@ -161,7 +161,9 @@ def SearchPlan():
                                hotel_price=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelPrice)),
                                activities = html_activities
                                )
-
+    except Exception as e:
+      # Renderizar una plantilla alternativa en caso de excepción
+        return render_template('error.html')
 def search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural) :
     global mss_cnt
 
