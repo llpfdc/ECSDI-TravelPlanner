@@ -80,7 +80,7 @@ def find_activities(hotel_latitude,hotel_longitude, outbound, returnDate, rangeP
       "latitude": hotel_latitude,
       "longitude": hotel_longitude,
       "radius": 5,
-      "categories":'SIGHTS'
+      "categories": 'SIGHTS'
   }
   paramsPlayful = {
       "latitude": hotel_latitude,
@@ -220,7 +220,7 @@ def comunicacion():
                         returnDate = g.value(subject=restriction,predicate=ONTO.Return)
                         restrictionsDict['return'] = returnDate
                 print(restrictionsDict)
-                results = find_activities(restrictionsDict['hotel_latitude'],restrictionsDict['hotel_longitude'],restrictionsDict['outbound'],restrictionsDict['return'],restrictionsDict['rangePlayful'],restrictionsDict['rangeFestive'], restrictionsDict['rangeCultural'])
+                results = find_activities(float(restrictionsDict['hotel_latitude']),float(restrictionsDict['hotel_longitude']),restrictionsDict['outbound'],restrictionsDict['return'],restrictionsDict['rangePlayful'],restrictionsDict['rangeFestive'], restrictionsDict['rangeCultural'])
                 result_graph = Graph()
                 activities_subj = ONTO['Activities']
                 result_graph.add((activities_subj, RDF.type, ONTO.Activities))
