@@ -71,7 +71,8 @@ def find_activities(hotel_latitude,hotel_longitude, outbound, returnDate, rangeP
   res_festive = round((int(rangeFestive) / 3) * days)
   rest = days + (days - int(rangeFestive))
 
-
+  hotel_latitude = 41.3837315
+  hotel_longitude = 2.169104
   url = "https://test.api.amadeus.com/v1/reference-data/locations/pois"
   headers = {
       "Authorization": "Bearer " + get_acces_token_flight()
@@ -102,12 +103,13 @@ def find_activities(hotel_latitude,hotel_longitude, outbound, returnDate, rangeP
   }
   response = requests.get(url, headers=headers, params=paramsCultural)
   cultural = []
-
-  for i in range(min(res_culture, len(response.data))):
-      element = response.data[i]
-      name = element['name']
-      latitude = element['geoCode']['latitude']
-      longitude = element['geoCode']['longitude']
+  response_data = json.loads(response.text)
+  print(response.json)
+  poi_data = response_data["data"][:res_culture]
+  for poi in poi_data:
+      name = poi["name"]
+      latitude = poi["geoCode"]["latitude"]
+      longitude = poi["geoCode"]["longitude"]
       cultural.append(
           {'name': name, 'latitude': latitude, 'longitude': longitude})
 
@@ -115,11 +117,13 @@ def find_activities(hotel_latitude,hotel_longitude, outbound, returnDate, rangeP
 
   response = requests.get(url, headers=headers, params=paramsPlayful)
   playful = []
-  for i in range(min(res_playful, len(response.data))):
-      element = response.data[i]
-      name = element['name']
-      latitude = element['geoCode']['latitude']
-      longitude = element['geoCode']['longitude']
+  response_data = json.loads(response.text)
+  print(response.json)
+  poi_data = response_data["data"][:res_playful]
+  for poi in poi_data:
+      name = poi["name"]
+      latitude = poi["geoCode"]["latitude"]
+      longitude = poi["geoCode"]["longitude"]
       playful.append(
           {'name': name, 'latitude': latitude, 'longitude': longitude})
 
@@ -127,11 +131,13 @@ def find_activities(hotel_latitude,hotel_longitude, outbound, returnDate, rangeP
 
   response = requests.get(url, headers=headers, params=paramsFestival)
   festival = []
-  for i in range(min(res_festive, len(response.data))):
-      element = response.data[i]
-      name = element['name']
-      latitude = element['geoCode']['latitude']
-      longitude = element['geoCode']['longitude']
+  response_data = json.loads(response.text)
+  print(response.json)
+  poi_data = response_data["data"][:res_festive]
+  for poi in poi_data:
+      name = poi["name"]
+      latitude = poi["geoCode"]["latitude"]
+      longitude = poi["geoCode"]["longitude"]
       festival.append(
           {'name': name, 'latitude': latitude, 'longitude': longitude})
 
@@ -139,11 +145,13 @@ def find_activities(hotel_latitude,hotel_longitude, outbound, returnDate, rangeP
 
   response = requests.get(url, headers=headers, params=paramsRestaurant)
   restaurants = []
-  for i in range(min(rest, len(response.data))):
-      element = response.data[i]
-      name = element['name']
-      latitude = element['geoCode']['latitude']
-      longitude = element['geoCode']['longitude']
+  response_data = json.loads(response.text)
+  print(response.json)
+  poi_data = response_data["data"][:rest]
+  for poi in poi_data:
+      name = poi["name"]
+      latitude = poi["geoCode"]["latitude"]
+      longitude = poi["geoCode"]["longitude"]
       restaurants.append(
           {'name': name, 'latitude': latitude, 'longitude': longitude})
 
