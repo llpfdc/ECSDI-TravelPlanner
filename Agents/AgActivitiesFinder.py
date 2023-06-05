@@ -61,7 +61,7 @@ def get_msg_count():
     global mss_cnt
     mss_cnt += 1
     return mss_cnt
-def find_activities(hotel_latitude,hotel_longitude, outbound, returnDate, rangePlayful, rangeFestive, rangeCultural):
+def find_activities(outbound, returnDate, rangePlayful, rangeFestive, rangeCultural):
   suma = int(rangePlayful) + int(rangeCultural)
   outbound_date = datetime.strptime(outbound, "%Y-%m-%d").date()
   return_date = datetime.strptime(returnDate, "%Y-%m-%d").date()
@@ -206,12 +206,6 @@ def comunicacion():
                 restrictions = g.objects(content,ONTO.RestrictedBy)
                 restrictionsDict = {}
                 for restriction in restrictions:
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.HotelLatitude:
-                        hotel_latitude= g.value(subject=restriction,predicate=ONTO.HotelLatitude)
-                        restrictionsDict['hotel_latitude'] = hotel_latitude
-                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.HotelLongitude:
-                        hotel_longitude = g.value(subject=restriction, predicate=ONTO.HotelLongitude)
-                        restrictionsDict['hotel_longitude'] = hotel_longitude
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.PlayfulRestriction:
                         rangePlayful = g.value(subject=restriction,predicate=ONTO.Playful)
                         restrictionsDict['rangePlayful'] = rangePlayful
@@ -228,7 +222,7 @@ def comunicacion():
                         returnDate = g.value(subject=restriction,predicate=ONTO.Return)
                         restrictionsDict['return'] = returnDate
                 print(restrictionsDict)
-                results = find_activities(float(restrictionsDict['hotel_latitude']),float(restrictionsDict['hotel_longitude']),restrictionsDict['outbound'],restrictionsDict['return'],restrictionsDict['rangePlayful'],restrictionsDict['rangeFestive'], restrictionsDict['rangeCultural'])
+                results = find_activities(restrictionsDict['outbound'], restrictionsDict['return'], restrictionsDict['rangePlayful'], restrictionsDict['rangeFestive'], restrictionsDict['rangeCultural'])
                 result_graph = Graph()
                 activities_subj = ONTO['Activities']
                 result_graph.add((activities_subj, RDF.type, ONTO.Activities))
