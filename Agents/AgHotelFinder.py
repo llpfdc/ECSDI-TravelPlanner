@@ -15,6 +15,8 @@ from Util.Logging import config_logger
 from Util.APIKeys import get_acces_token_hotel
 import time
 
+__author__ = 'ericpereziban'
+
 # Configuration stuff
 hostname = socket.gethostname()
 port = 9016

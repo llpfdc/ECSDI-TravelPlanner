@@ -29,7 +29,7 @@ from Util.Agent import Agent
 from Util.OntoNamespaces import ACL,ONTO
 
 from Util.Logging import config_logger
-__author__ = 'javier'
+__author__ = 'Team'
 
 # Configuration stuff
 hostname = socket.gethostname()

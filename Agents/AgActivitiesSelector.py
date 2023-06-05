@@ -13,6 +13,8 @@ from Util.Agent import Agent
 from Util.OntoNamespaces import ACL,ONTO
 from Util.Logging import config_logger
 
+__author__ = 'sergioguri00'
+
 # Configuration stuff
 hostname = socket.gethostname()
 port = 9031
