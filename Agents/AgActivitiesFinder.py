@@ -14,7 +14,7 @@ from Util.FlaskServer import shutdown_server
 from Util.Agent import Agent
 from Util.OntoNamespaces import ACL,ONTO
 from Util.Logging import config_logger
-from Util.APIKeys import get_acces_token
+from Util.APIKeys import get_acces_token_flight
 import time
 
 
@@ -62,19 +62,19 @@ def get_msg_count():
     mss_cnt += 1
     return mss_cnt
 def find_activities(hotel_latitude,hotel_longitude, outbound, returnDate, rangePlayful, rangeFestive, rangeCultural):
-  suma = rangePlayful + rangeCultural
+  suma = int(rangePlayful) + int(rangeCultural)
   outbound_date = datetime.strptime(outbound, "%Y-%m-%d").date()
   return_date = datetime.strptime(returnDate, "%Y-%m-%d").date()
   days = (return_date - outbound_date).days
-  res_playful = round(days * 2 * (rangePlayful / suma))
-  res_culture = round(days * 2 * (rangeCultural / suma))
-  res_festive = round((rangeFestive / 3) * days)
-  rest = days + (days - rangeFestive)
+  res_playful = round(days * 2 * (int(rangePlayful) / suma))
+  res_culture = round(days * 2 * (int(rangeCultural) / suma))
+  res_festive = round((int(rangeFestive) / 3) * days)
+  rest = days + (days - int(rangeFestive))
 
 
   url = "https://test.api.amadeus.com/v1/reference-data/locations/pois"
   headers = {
-      "Authorization": "Bearer " + get_acces_token()
+      "Authorization": "Bearer " + get_acces_token_flight()
   }
   paramsCultural = {
       "latitude": hotel_latitude,
@@ -194,30 +194,30 @@ def comunicacion():
         else:
             content = msdict['content']
             action = g.value(subject=content, predicate=RDF.type)
-            if action == ONTO.SearchPlan:
+            if action == ONTO.SearchActivities:
                 restrictions = g.objects(content,ONTO.RestrictedBy)
                 restrictionsDict = {}
                 for restriction in restrictions:
-                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.HotelLatitude:
-                        hotel_latitude = g.value(subject=restriction, predicate=ONTO.HotelLatitude)
+                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.HotelLatitude:
+                        hotel_latitude= g.value(subject=restriction,predicate=ONTO.HotelLatitude)
                         restrictionsDict['hotel_latitude'] = hotel_latitude
                     if g.value(subject=restriction, predicate=RDF.type) == ONTO.HotelLongitude:
                         hotel_longitude = g.value(subject=restriction, predicate=ONTO.HotelLongitude)
                         restrictionsDict['hotel_longitude'] = hotel_longitude
-                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.PlayfulRestriction:
-                        rangePlayful = g.value(subject=restriction, predicate=ONTO.rangePlayful)
+                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.PlayfulRestriction:
+                        rangePlayful = g.value(subject=restriction,predicate=ONTO.Playful)
                         restrictionsDict['rangePlayful'] = rangePlayful
-                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.FestiveRestriction:
-                        rangeFestive = g.value(subject=restriction, predicate=ONTO.rangeFestive)
+                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.FestiveRestriction:
+                        rangeFestive = g.value(subject=restriction,predicate=ONTO.Festive)
                         restrictionsDict['rangeFestive'] = rangeFestive
-                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.CulturalRestriction:
-                        rangeCultural = g.value(subject=restriction, predicate=ONTO.rangeCultural)
+                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.CulturalRestriction:
+                        rangeCultural = g.value(subject=restriction,predicate=ONTO.Cultural)
                         restrictionsDict['rangeCultural'] = rangeCultural
-                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.OutboundRestriction:
-                        outbound = g.value(subject=restriction, predicate=ONTO.Outbound)
+                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.OutboundRestriction:
+                        outbound = g.value(subject=restriction,predicate=ONTO.Outbound)
                         restrictionsDict['outbound'] = outbound
-                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.ReturnRestriction:
-                        returnDate = g.value(subject=restriction, predicate=ONTO.Return)
+                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.ReturnRestriction:
+                        returnDate = g.value(subject=restriction,predicate=ONTO.Return)
                         restrictionsDict['return'] = returnDate
                 print(restrictionsDict)
                 results = find_activities(restrictionsDict['hotel_latitude'],restrictionsDict['hotel_longitude'],restrictionsDict['outbound'],restrictionsDict['return'],restrictionsDict['rangePlayful'],restrictionsDict['rangeFestive'], restrictionsDict['rangeCultural'])

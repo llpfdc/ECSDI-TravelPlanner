@@ -27,6 +27,7 @@ from Util.ACLMessages import *
 from Util.FlaskServer import shutdown_server
 from Util.Agent import Agent
 from Util.OntoNamespaces import ACL,ONTO
+
 from Util.Logging import config_logger
 __author__ = 'javier'
 
@@ -144,7 +145,7 @@ def SearchPlan():
         hotel = search_hotel(destination, price, outboundDate, returnDate, central)
         hotel_latitude = hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelLatitude)
         hotel_longitude = hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelLongitude)
-        #activities = search_activities(outboundDate, returnDate, hotel_latitude, hotel_longitude, rangePlayful, rangeFestive, rangeCultural)
+        activities = search_activities(outboundDate, returnDate, hotel_latitude, hotel_longitude, rangePlayful, rangeFestive, rangeCultural)
         return render_template('plan.html',
                                flight_price_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.Price)),
                                flight_arrival_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.ArrivalTime)),
@@ -158,7 +159,7 @@ def SearchPlan():
                                hotel_checkin=str(hotel.value(subject=ONTO['Hotel'],predicate = ONTO.CheckInDate)),
                                hotel_checkout=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.CheckOutDate)),
                                hotel_price=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelPrice)),
-                               #activities=str(activities)
+                               activities=str(activities)
                                )
 
 def search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural) :
@@ -298,7 +299,7 @@ def search_activities(outboundDate, returnDate, hotel_latitude, hotel_longitude,
     if rangeCultural:
         culturalRestriction = ONTO['CulturalRestriction_' + str(mss_cnt)]
         g.add((culturalRestriction, RDF.type, ONTO.CulturalRestriction))
-        g.add((culturalRestriction, ONTO.Festive, Literal(rangeCultural)))
+        g.add((culturalRestriction, ONTO.Cultural, Literal(rangeCultural)))
         g.add((action, ONTO.RestrictedBy, URIRef(culturalRestriction)))
 
     msg = build_message(g, ACL.request, AgentConsultor.uri, AgentActivitiesSelector.uri, action, mss_cnt)

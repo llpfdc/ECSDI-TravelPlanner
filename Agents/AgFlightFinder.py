@@ -13,7 +13,7 @@ from Util.Agent import Agent
 from Util.OntoNamespaces import ACL,ONTO
 from Util.Logging import config_logger
 from Util.APIKeys import get_acces_token_flight
-
+import time
 
 # Configuration stuff
 hostname = socket.gethostname()
@@ -132,6 +132,7 @@ def comunicacion():
                         returnDate = str(g.value(subject=restriction,predicate=ONTO.Return))
                         restrictionsDict['return'] = returnDate
                 print(restrictionsDict)
+
                 results1 = find_flight(restrictionsDict['origin'],restrictionsDict['destination'],restrictionsDict['outbound'],restrictionsDict['return'],restrictionsDict['price'])
                 result_graph = Graph()
                 flight_subj = ONTO['Flight1']
@@ -139,7 +140,7 @@ def comunicacion():
                 result_graph.add((flight_subj, ONTO.DepartureTime, Literal(get_departure(results1)['at'])))
                 result_graph.add((flight_subj, ONTO.ArrivalTime, Literal(get_arrival(results1)['at'])))
                 result_graph.add((flight_subj, ONTO.Price, Literal(get_price(results1)['total'])))
-
+                time.sleep(2)
                 results2 = find_flight(restrictionsDict['destination'],restrictionsDict['origin'], restrictionsDict['return'],restrictionsDict['outbound'],restrictionsDict['price'])
                 flight_subj = ONTO['Flight2']
                 result_graph.add((flight_subj, RDF.type, ONTO.Flight2))

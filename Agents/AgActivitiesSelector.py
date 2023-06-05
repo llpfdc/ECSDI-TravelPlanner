@@ -85,7 +85,7 @@ def comunicacion():
             content = msdict['content']
             action = g.value(subject=content,predicate=RDF.type)
 
-            if action == ONTO.SearchPlan:
+            if action == ONTO.SearchActivities:
                 restrictions = g.objects(content,ONTO.RestrictedBy)
                 restrictionsDict = {}
 
@@ -97,13 +97,13 @@ def comunicacion():
                         hotel_longitude = g.value(subject=restriction, predicate=ONTO.HotelLongitude)
                         restrictionsDict['hotel_longitude'] = hotel_longitude
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.PlayfulRestriction:
-                        rangePlayful = g.value(subject=restriction,predicate=ONTO.rangePlayful)
+                        rangePlayful = g.value(subject=restriction,predicate=ONTO.Playful)
                         restrictionsDict['rangePlayful'] = rangePlayful
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.FestiveRestriction:
-                        rangeFestive = g.value(subject=restriction,predicate=ONTO.rangeFestive)
+                        rangeFestive = g.value(subject=restriction,predicate=ONTO.Festive)
                         restrictionsDict['rangeFestive'] = rangeFestive
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.CulturalRestriction:
-                        rangeCultural = g.value(subject=restriction,predicate=ONTO.rangeCultural)
+                        rangeCultural = g.value(subject=restriction,predicate=ONTO.Cultural)
                         restrictionsDict['rangeCultural'] = rangeCultural
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.OutboundRestriction:
                         outbound = g.value(subject=restriction,predicate=ONTO.Outbound)

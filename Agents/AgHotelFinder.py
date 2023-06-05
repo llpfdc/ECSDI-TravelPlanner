@@ -13,7 +13,7 @@ from Util.Agent import Agent
 from Util.OntoNamespaces import ACL,ONTO
 from Util.Logging import config_logger
 from Util.APIKeys import get_acces_token_hotel
-
+import time
 
 # Configuration stuff
 hostname = socket.gethostname()
@@ -192,6 +192,7 @@ def comunicacion():
                             restrictionsDict['central'] = 10
                 print(restrictionsDict)
                 results = find_hotels(restrictionsDict['city'],restrictionsDict['central'])
+                time.sleep(2)
                 hotelsId = get_hotelId(results)
                 hotels = find_best_hotels(','.join(hotelsId), restrictionsDict['checkindate'], restrictionsDict['checkoutdate'], restrictionsDict['price'])
                 print("Hotels: ", hotels)

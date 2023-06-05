@@ -25,8 +25,8 @@ def get_acces_token_flight():
         print("Error:", response.status_code)
     return -1
 
-API_KEY_HOTEL='4YHTfk4bgT05mTD35CAdGS1MaN27iWbo'
-API_SECRET_HOTEL='NdaJ6OxS7KESQXTy'
+API_KEY_HOTEL='55JQbVQzuw2hCKPJbUeeyDYysSJfOPBm'
+API_SECRET_HOTEL='rMEtLZbFLbgZOVLQ'
 
 def get_acces_token_hotel():
     url = "https://test.api.amadeus.com/v1/security/oauth2/token"
@@ -48,3 +48,4 @@ def get_acces_token_hotel():
     else:
         print("Error:", response.status_code)
     return -1
+
