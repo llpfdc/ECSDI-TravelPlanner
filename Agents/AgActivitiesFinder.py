@@ -204,6 +204,7 @@ def comunicacion():
             action = g.value(subject=content, predicate=RDF.type)
             if action == ONTO.SearchActivities:
                 restrictions = g.objects(content,ONTO.RestrictedBy)
+                print(restrictions)
                 restrictionsDict = {}
                 for restriction in restrictions:
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.PlayfulRestriction:

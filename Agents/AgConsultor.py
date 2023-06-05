@@ -141,19 +141,19 @@ def SearchPlan():
         rangeCultural = request.form['rangeCultural']
 
 
-        #plan = search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural)
+        plan = search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural)
         hotel = search_hotel(destination, price, outboundDate, returnDate, central)
         activities_searched = search_activities(outboundDate, returnDate, rangePlayful, rangeFestive, rangeCultural)
         res_activities = str(activities_searched.value(subject=ONTO['Activities'], predicate=ONTO.Activities))
         html_activities = json.loads(res_activities)
         return render_template('plan.html',
-                               #flight_price_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.Price)),
-                               #flight_arrival_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.ArrivalTime)),
-                               #flight_departure_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.DepartureTime)),
+                               flight_price_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.Price)),
+                               flight_arrival_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.ArrivalTime)),
+                               flight_departure_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.DepartureTime)),
 
-                               #flight_price_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.Price)),
-                               #flight_arrival_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.ArrivalTime)),
-                               #flight_departure_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.DepartureTime)),
+                               flight_price_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.Price)),
+                               flight_arrival_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.ArrivalTime)),
+                               flight_departure_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.DepartureTime)),
 
                                hotel_name=str(hotel.value(subject=ONTO['Hotel'],predicate=ONTO.HotelName)),
                                hotel_checkin=str(hotel.value(subject=ONTO['Hotel'],predicate = ONTO.CheckInDate)),

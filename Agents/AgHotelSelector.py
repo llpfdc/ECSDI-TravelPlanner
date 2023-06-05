@@ -110,6 +110,8 @@ def comunicacion():
                 g.add((searchHotelsAct, RDF.type, ONTO.SearchHotel))
                 msg = build_message(g, ACL.request, AgentHotelSelector.uri, AgentHotelFinder.uri, searchHotelsAct, mss_cnt)
                 mss_cnt += 1
+                print(msg)
+                print(AgentHotelFinder.address)
                 ghotels = send_message(msg, AgentHotelFinder.address)
                 return ghotels.serialize(format='xml'),200
 @app.route("/Stop")

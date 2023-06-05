@@ -110,6 +110,7 @@ def comunicacion():
                 g.add((searchFlightsAct, RDF.type, ONTO.SearchFlight))
                 msg = build_message(g, ACL.request, AgentFlightSelector.uri, AgentFlightFinder.uri, searchFlightsAct, mss_cnt)
                 mss_cnt += 1
+                print(msg)
                 gflights = send_message(msg, AgentFlightFinder.address)
 
 

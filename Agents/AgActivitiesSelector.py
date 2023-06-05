@@ -88,22 +88,22 @@ def comunicacion():
             if action == ONTO.SearchActivities:
                 restrictions = g.objects(content,ONTO.RestrictedBy)
                 restrictionsDict = {}
-
+                print(restrictions)
                 for restriction in restrictions:
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.PlayfulRestriction:
-                        rangePlayful = g.value(subject=restriction,predicate=ONTO.Playful)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.PlayfulRestriction:
+                        rangePlayful = g.value(subject=restriction, predicate=ONTO.Playful)
                         restrictionsDict['rangePlayful'] = rangePlayful
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.FestiveRestriction:
-                        rangeFestive = g.value(subject=restriction,predicate=ONTO.Festive)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.FestiveRestriction:
+                        rangeFestive = g.value(subject=restriction, predicate=ONTO.Festive)
                         restrictionsDict['rangeFestive'] = rangeFestive
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.CulturalRestriction:
-                        rangeCultural = g.value(subject=restriction,predicate=ONTO.Cultural)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.CulturalRestriction:
+                        rangeCultural = g.value(subject=restriction, predicate=ONTO.Cultural)
                         restrictionsDict['rangeCultural'] = rangeCultural
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.OutboundRestriction:
-                        outbound = g.value(subject=restriction,predicate=ONTO.Outbound)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.OutboundRestriction:
+                        outbound = g.value(subject=restriction, predicate=ONTO.Outbound)
                         restrictionsDict['outbound'] = outbound
-                    if g.value(subject=restriction,predicate=RDF.type) == ONTO.ReturnRestriction:
-                        returnDate = g.value(subject=restriction,predicate=ONTO.Return)
+                    if g.value(subject=restriction, predicate=RDF.type) == ONTO.ReturnRestriction:
+                        returnDate = g.value(subject=restriction, predicate=ONTO.Return)
                         restrictionsDict['return'] = returnDate
                 print(restrictionsDict)
                 searchActivitiesAct = ONTO['SearchActivities_' + str(mss_cnt)]
