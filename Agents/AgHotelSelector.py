@@ -84,8 +84,8 @@ def comunicacion():
         else:
             content = msdict['content']
             action = g.value(subject=content,predicate=RDF.type)
-
-            if action == ONTO.SearchPlan:
+            print(action)
+            if action == ONTO.SearchHotel:
                 restrictions = g.objects(content,ONTO.RestrictedBy)
                 restrictionsDict = {}
 

@@ -12,7 +12,7 @@ from Util.FlaskServer import shutdown_server
 from Util.Agent import Agent
 from Util.OntoNamespaces import ACL,ONTO
 from Util.Logging import config_logger
-from Util.APIKeys import get_acces_token
+from Util.APIKeys import get_acces_token_hotel
 
 
 # Configuration stuff
@@ -61,7 +61,7 @@ def get_msg_count():
 def find_hotels(cityCode, radius):
   url = "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city"
   headers = {
-      "Authorization": "Bearer " + get_acces_token()
+      "Authorization": "Bearer " + get_acces_token_hotel()
   }
   params = {
       "cityCode": cityCode,
@@ -75,7 +75,7 @@ def find_hotels(cityCode, radius):
 def find_best_hotels(hotelIds, checkInDate, checkOutDate, priceRange):
   url = "https://test.api.amadeus.com/v3/shopping/hotel-offers"
   headers = {
-      "Authorization": "Bearer " + get_acces_token()
+      "Authorization": "Bearer " + get_acces_token_hotel()
   }
   params = {
       "hotelIds": hotelIds,
@@ -168,7 +168,7 @@ def comunicacion():
         else:
             content = msdict['content']
             action = g.value(subject=content, predicate=RDF.type)
-            if action == ONTO.SearchPlan:
+            if action == ONTO.SearchHotel:
                 restrictions = g.objects(content,ONTO.RestrictedBy)
                 restrictionsDict = {}
                 for restriction in restrictions:
@@ -187,9 +187,9 @@ def comunicacion():
                     if g.value(subject=restriction,predicate=RDF.type) == ONTO.CentralRestriction:
                         central = g.value(subject=restriction,predicate=ONTO.Central)
                         if central:
-                          restrictionsDict['central'] = "5"
+                            restrictionsDict['central'] = 5
                         else:
-                          restrictionsDict['central'] = "10"
+                            restrictionsDict['central'] = 10
                 print(restrictionsDict)
                 results = find_hotels(restrictionsDict['city'],restrictionsDict['central'])
                 hotelsId = get_hotelId(results)

@@ -12,7 +12,7 @@ from Util.FlaskServer import shutdown_server
 from Util.Agent import Agent
 from Util.OntoNamespaces import ACL,ONTO
 from Util.Logging import config_logger
-from Util.APIKeys import get_acces_token
+from Util.APIKeys import get_acces_token_flight
 
 
 # Configuration stuff
@@ -61,7 +61,7 @@ def get_msg_count():
 def find_flight(origin,dest,departureDate ,returnDate,maxPrice):
   url = "https://test.api.amadeus.com/v2/shopping/flight-offers"
   headers = {
-      "Authorization": "Bearer " + get_acces_token()
+      "Authorization": "Bearer " + get_acces_token_flight()
   }
   params = {
       "originLocationCode": origin,
