@@ -13,6 +13,7 @@ Asume que el agente de registro esta en el puerto 9000
 
 @author: javier
 """
+import ast
 import json
 from multiprocessing import Process, Queue
 import socket
@@ -153,12 +154,14 @@ def SearchPlan():
     try:
         activities_searched = search_activities(destination, outboundDate, returnDate, rangePlayful, rangeFestive,
                                                 rangeCultural)
-        html_activities = activities_searched  # Remove the conversion to string and JSON parsing
+        res_activities = str(activities_searched.value(subject=ONTO['Activities'], predicate=ONTO.Activities))
+        html_activities = ast.literal_eval(res_activities)
 
     except Exception as e:
         activities_searched = search_activities(destination, outboundDate, returnDate, rangePlayful, rangeFestive,
                                                 rangeCultural)
-        html_activities = activities_searched  # Remove the conversion to string and JSON parsing
+        res_activities = str(activities_searched.value(subject=ONTO['Activities'], predicate=ONTO.Activities))
+        html_activities = ast.literal_eval(res_activities)
     return render_template('plan.html',
                            flight_price_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.Price)),
                            flight_arrival_departure=str(

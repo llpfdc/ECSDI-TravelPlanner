@@ -25,18 +25,19 @@
     <h2>CheckOut: {{hotel_checkout}}</h2>
 
     <h1>ACTIVITIES:</h1>
-    <ul>
-        {% for group in activities %}
-        <li>
-            <h2>Day:</h2>
-            <ul>
-                {% for item in group %}
-                <li>{{ item.name }} ({{ item.latitude }}, {{ item.longitude }})</li>
-                {% endfor %}
-            </ul>
-        </li>
-        {% endfor %}
-    </ul>
+        <ul>
+            {% for group in activities %}
+            <li>
+                <h2>Day:</h2>
+                <ul>
+                    {% for item in group %}
+                    <li>{{ item.name }} ({{ item.latitude }}, {{ item.longitude }})</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+
 
 </body>
 </html>
