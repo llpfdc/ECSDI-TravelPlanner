@@ -14,7 +14,7 @@ from Util.FlaskServer import shutdown_server
 from Util.Agent import Agent
 from Util.OntoNamespaces import ACL,ONTO
 from Util.Logging import config_logger
-from Util.APIKeys import get_acces_token_flight
+from Util.APIKeys import get_acces_token_activities
 import time
 
 __author__ = 'sergioguri00'
@@ -82,7 +82,7 @@ def find_activities(city, outbound, returnDate, rangePlayful, rangeFestive, rang
 
   url = "https://test.api.amadeus.com/v1/reference-data/locations/cities"
   headers = {
-      "Authorization": "Bearer " + get_acces_token_flight()
+      "Authorization": "Bearer " + get_acces_token_activities()
   }
   params = {
       "keyword": city,

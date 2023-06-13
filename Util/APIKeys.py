@@ -49,3 +49,25 @@ def get_acces_token_hotel():
         print("Error:", response.status_code)
     return -1
 
+API_KEY_ACTIVITIES='5X4VjYbWOqdnuUSukZ8RPGHxSkrEN2pV'
+API_SECRET_ACTIVITIES='XVvgfaVLGFDqhISc'
+def get_acces_token_activities():
+    url = "https://test.api.amadeus.com/v1/security/oauth2/token"
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    data = {
+        "grant_type": "client_credentials",
+        "client_id": API_KEY_ACTIVITIES,
+        "client_secret": API_SECRET_ACTIVITIES
+    }
+
+    response = requests.post(url, headers=headers, data=data)
+    # Check the response status code
+    if response.status_code == 200:
+        data = response.json()
+        # Process the data as needed
+        return data['access_token']
+    else:
+        print("Error:", response.status_code)
+    return -1
