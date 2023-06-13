@@ -85,6 +85,7 @@ def find_best_hotels(hotelIds, checkInDate, checkOutDate, priceRange):
     headers = {
         "Authorization": "Bearer " + get_acces_token_hotel()
     }
+
     params = {
         "hotelIds": hotelIds,
         "adults": 1,
@@ -120,7 +121,7 @@ def find_best_hotel(hotels):
     while i < max:
         max_offers = len(hotels["data"][i]["offers"])
         j = 0
-        while j < max:
+        while j < max_offers:
             if best_hotel is None:
                 best_hotel = i
                 best_offer = j
@@ -211,12 +212,23 @@ def comunicacion():
                 results = find_hotels(restrictionsDict['city'], restrictionsDict['central'])
                 time.sleep(2)
                 hotelsId = get_hotelId(results)
-                hotels = find_best_hotels(','.join(hotelsId), restrictionsDict['checkindate'],
-                                          restrictionsDict['checkoutdate'], restrictionsDict['price'])
-                print("Hotels: ", hotels)
-                hotel = find_best_hotel(hotels)
-                print("Best hotel: ", hotels["data"][hotel[0]])
-                print("Best hotel offer: ", hotels["data"][hotel[0]]["offers"][hotel[1]])
+
+                hotels = find_best_hotels(','.join(hotelsId[:150]), restrictionsDict['checkindate'],
+                                          restrictionsDict['checkoutdate'], "-".join(["1", restrictionsDict['price']]))
+                if len(hotels["data"]) == 0 and len(hotelsId) > 150:
+                    hotels += find_best_hotels(','.join(hotelsId[150:300]), restrictionsDict['checkindate'],
+                                               restrictionsDict['checkoutdate'],
+                                               "-".join(["1", restrictionsDict['price']]))
+                if len(hotels["data"]) == 0 and len(hotelsId) > 300:
+                    hotels += find_best_hotels(','.join(hotelsId[300:len(hotelsId)]), restrictionsDict['checkindate'],
+                                               restrictionsDict['checkoutdate'],
+                                               "-".join(["1", restrictionsDict['price']]))
+
+                if(len(hotels["data"]) > 0 ):
+                    print("Hotels: ", hotels)
+                    hotel = find_best_hotel(hotels)
+                    print("Best hotel: ", hotels["data"][hotel[0]])
+                    print("Best hotel offer: ", hotels["data"][hotel[0]]["offers"][hotel[1]])
 
                 result_graph = Graph()
                 hotel_subj = ONTO['Hotel']

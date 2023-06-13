@@ -70,7 +70,7 @@ def find_activities(city, outbound, returnDate, rangePlayful, rangeFestive, rang
   res_playful = round(days * 2 * (int(rangePlayful) / suma))
   res_culture = round(days * 2 * (int(rangeCultural) / suma))
   res_festive = round((int(rangeFestive) / 3) * days)
-  rest = days + (days - int(rangeFestive))
+  rest = days + (days - res_festive)
   city = str(city)
   if city=="BCN": city = "Barcelona"
   if city=="BER": city = "Berlin"
@@ -121,7 +121,6 @@ def find_activities(city, outbound, returnDate, rangePlayful, rangeFestive, rang
   response = requests.get(url, headers=headers, params=paramsCultural)
   cultural = []
   response_data = json.loads(response.text)
-  print(response.json)
   poi_data = response_data["data"][:res_culture]
   for poi in poi_data:
       name = poi["name"]
@@ -135,7 +134,6 @@ def find_activities(city, outbound, returnDate, rangePlayful, rangeFestive, rang
   response = requests.get(url, headers=headers, params=paramsPlayful)
   playful = []
   response_data = json.loads(response.text)
-  print(response.json)
   poi_data = response_data["data"][:res_playful]
   for poi in poi_data:
       name = poi["name"]
@@ -149,7 +147,6 @@ def find_activities(city, outbound, returnDate, rangePlayful, rangeFestive, rang
   response = requests.get(url, headers=headers, params=paramsFestival)
   festival = []
   response_data = json.loads(response.text)
-  print(response.json)
   poi_data = response_data["data"][:res_festive]
   for poi in poi_data:
       name = poi["name"]
@@ -163,7 +160,6 @@ def find_activities(city, outbound, returnDate, rangePlayful, rangeFestive, rang
   response = requests.get(url, headers=headers, params=paramsRestaurant)
   restaurants = []
   response_data = json.loads(response.text)
-  print(response.json)
   poi_data = response_data["data"][:rest]
   for poi in poi_data:
       name = poi["name"]
@@ -178,6 +174,7 @@ def find_activities(city, outbound, returnDate, rangePlayful, rangeFestive, rang
       if (len(cultural) - 1 >= i):
           day.append(cultural[i])
       else:
+
           day.append(playful[days - 1 + (i - len(cultural) + 1)])
       day.append(restaurants[i])
       if (len(playful) - 1 >= i):
@@ -221,7 +218,6 @@ def comunicacion():
             action = g.value(subject=content, predicate=RDF.type)
             if action == ONTO.SearchActivities:
                 restrictions = g.objects(content,ONTO.RestrictedBy)
-                print(restrictions)
                 restrictionsDict = {}
                 for restriction in restrictions:
                     if g.value(subject=restriction, predicate=RDF.type) == ONTO.CityRestriction:
@@ -291,4 +287,3 @@ if __name__ == '__main__':
     # Esperamos a que acaben los behaviors
     ab1.join()
     print('The End')
-

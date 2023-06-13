@@ -130,6 +130,7 @@ def SearchPlan():
     if request.method == 'GET':
         return render_template('travel_planner.html')
     else:
+
         origin = request.form['origin']
         destination = request.form['destination']
         price = request.form['price']
@@ -142,29 +143,42 @@ def SearchPlan():
 
     try:
         plan = search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural)
-        hotel = search_hotel(destination, price, outboundDate, returnDate, central)
-        activities_searched = search_activities(destination, outboundDate, returnDate, rangePlayful, rangeFestive, rangeCultural)
-        res_activities = str(activities_searched.value(subject=ONTO['Activities'], predicate=ONTO.Activities))
-        html_activities = json.loads(res_activities)
-        return render_template('plan.html',
-                               flight_price_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.Price)),
-                               flight_arrival_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.ArrivalTime)),
-                               flight_departure_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.DepartureTime)),
-
-                               flight_price_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.Price)),
-                               flight_arrival_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.ArrivalTime)),
-                               flight_departure_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.DepartureTime)),
-
-                               hotel_name=str(hotel.value(subject=ONTO['Hotel'],predicate=ONTO.HotelName)),
-                               hotel_checkin=str(hotel.value(subject=ONTO['Hotel'],predicate = ONTO.CheckInDate)),
-                               hotel_checkout=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.CheckOutDate)),
-                               hotel_price=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelPrice)),
-
-                               activities = html_activities
-                               )
     except Exception as e:
-      # Renderizar una plantilla alternativa en caso de excepción
-        return render_template('error.html')
+        plan = search_plan(origin, destination, price, outboundDate, returnDate, rangePlayful, rangeFestive,
+                           rangeCultural)
+    try:
+        hotel = search_hotel(destination, price, outboundDate, returnDate, central)
+    except Exception as e:
+        hotel = search_hotel(destination, price, outboundDate, returnDate, central)
+    try:
+        activities_searched = search_activities(destination, outboundDate, returnDate, rangePlayful, rangeFestive,
+                                                rangeCultural)
+        html_activities = activities_searched  # Remove the conversion to string and JSON parsing
+
+    except Exception as e:
+        activities_searched = search_activities(destination, outboundDate, returnDate, rangePlayful, rangeFestive,
+                                                rangeCultural)
+        html_activities = activities_searched  # Remove the conversion to string and JSON parsing
+    return render_template('plan.html',
+                           flight_price_departure=str(plan.value(subject=ONTO['Flight1'], predicate=ONTO.Price)),
+                           flight_arrival_departure=str(
+                               plan.value(subject=ONTO['Flight1'], predicate=ONTO.ArrivalTime)),
+                           flight_departure_departure=str(
+                               plan.value(subject=ONTO['Flight1'], predicate=ONTO.DepartureTime)),
+
+                           flight_price_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.Price)),
+                           flight_arrival_return=str(plan.value(subject=ONTO['Flight2'], predicate=ONTO.ArrivalTime)),
+                           flight_departure_return=str(
+                               plan.value(subject=ONTO['Flight2'], predicate=ONTO.DepartureTime)),
+
+                           hotel_name=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelName)),
+                           hotel_checkin=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.CheckInDate)),
+                           hotel_checkout=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.CheckOutDate)),
+                           hotel_price=str(hotel.value(subject=ONTO['Hotel'], predicate=ONTO.HotelPrice)),
+                           activities=html_activities  # Pass the list directly without accessing its value
+                           )
+
+
 def search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,rangeFestive,rangeCultural) :
     global mss_cnt
 
@@ -214,9 +228,9 @@ def search_plan(origin,destination,price,outboundDate,returnDate,rangePlayful,ra
         g.add((culturalRestriction, ONTO.Festive, Literal(rangeCultural)))
         g.add((action,ONTO.RestrictedBy,URIRef(culturalRestriction)))
 
-
+    mss_cnt += 1
     msg = build_message(g,ACL.request, AgentConsultor.uri, AgentFlightSelector.uri, action, mss_cnt)
-    mss_cnt +=1
+
     print(msg)
     resp = send_message(msg, AgentFlightSelector.address)
     return resp
@@ -254,9 +268,9 @@ def search_hotel(city, price, checkInDate, checkOutDate, central):
         g.add((centralRestriction, RDF.type, ONTO.CentralRestriction))
         g.add((centralRestriction, ONTO.Central, Literal(central)))
         g.add((action, ONTO.RestrictedBy, URIRef(centralRestriction)))
-
-    msg = build_message(g, ACL.request, AgentConsultor.uri, AgentHotelSelector.uri, action, mss_cnt)
     mss_cnt += 1
+    msg = build_message(g, ACL.request, AgentConsultor.uri, AgentHotelSelector.uri, action, mss_cnt)
+
     print(msg)
     resp = send_message(msg, AgentHotelSelector.address)
     return resp
@@ -299,9 +313,9 @@ def search_activities(city, outboundDate, returnDate, rangePlayful, rangeFestive
         g.add((culturalRestriction, RDF.type, ONTO.CulturalRestriction))
         g.add((culturalRestriction, ONTO.Cultural, Literal(rangeCultural)))
         g.add((action, ONTO.RestrictedBy, URIRef(culturalRestriction)))
-
-    msg = build_message(g, ACL.request, AgentConsultor.uri, AgentActivitiesSelector.uri, action, mss_cnt)
     mss_cnt += 1
+    msg = build_message(g, ACL.request, AgentConsultor.uri, AgentActivitiesSelector.uri, action, mss_cnt)
+
     print(msg)
     resp = send_message(msg, AgentActivitiesSelector.address)
     return resp

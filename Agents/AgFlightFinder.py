@@ -154,7 +154,6 @@ def comunicacion():
 
 
                 return result_graph.serialize(format='xml'), 200
-
 @app.route("/Stop")
 def stop():
     """

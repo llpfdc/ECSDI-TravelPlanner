@@ -53,7 +53,7 @@ def send_message(gmess, address):
     """
     msg = gmess.serialize(format='xml')
     r = requests.get(address, params={'content': msg})
-
+    print(r)
     # Procesa la respuesta y la retorna como resultado como grafo
     gr = Graph()
     gr.parse(data=r.text, format='xml')

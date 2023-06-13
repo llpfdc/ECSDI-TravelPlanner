@@ -110,17 +110,13 @@ def comunicacion():
                 print(restrictionsDict)
                 searchFlightsAct = ONTO['SearchFlight_' + str(mss_cnt)]
                 g.add((searchFlightsAct, RDF.type, ONTO.SearchFlight))
-                msg = build_message(g, ACL.request, AgentFlightSelector.uri, AgentFlightFinder.uri, searchFlightsAct, mss_cnt)
                 mss_cnt += 1
+                msg = build_message(g, ACL.request, AgentFlightSelector.uri, AgentFlightFinder.uri, searchFlightsAct, mss_cnt)
+
                 print(msg)
                 gflights = send_message(msg, AgentFlightFinder.address)
-
-
-
                 return gflights.serialize(format='xml'),200
-                #flightsFoundAct = ONTO['FlightsFound_' + str(mss_cnt)]
-                #g.add((flightsFoundAct, RDF.type, ONTO.FlightFound))
-                #send_message(build_message(gflights, ACL.inform, AgentFlightSelector.uri, AgentConsultor.uri, flightsFoundAct, mss_cnt),AgentConsultor.address)
+
 @app.route("/Stop")
 def stop():
     """

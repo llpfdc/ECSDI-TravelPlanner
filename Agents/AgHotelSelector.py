@@ -110,8 +110,9 @@ def comunicacion():
                 print(restrictionsDict)
                 searchHotelsAct = ONTO['SearchHotel_' + str(mss_cnt)]
                 g.add((searchHotelsAct, RDF.type, ONTO.SearchHotel))
-                msg = build_message(g, ACL.request, AgentHotelSelector.uri, AgentHotelFinder.uri, searchHotelsAct, mss_cnt)
                 mss_cnt += 1
+                msg = build_message(g, ACL.request, AgentHotelSelector.uri, AgentHotelFinder.uri, searchHotelsAct, mss_cnt)
+
                 print(msg)
                 print(AgentHotelFinder.address)
                 ghotels = send_message(msg, AgentHotelFinder.address)

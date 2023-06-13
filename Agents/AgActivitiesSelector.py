@@ -113,11 +113,10 @@ def comunicacion():
                 print(restrictionsDict)
                 searchActivitiesAct = ONTO['SearchActivities_' + str(mss_cnt)]
                 g.add((searchActivitiesAct, RDF.type, ONTO.SearchActivities))
-                msg = build_message(g, ACL.request, AgentActivitiesSelector.uri, AgentActivitiesFinder.uri, searchActivitiesAct, mss_cnt)
                 mss_cnt += 1
+                msg = build_message(g, ACL.request, AgentActivitiesSelector.uri, AgentActivitiesFinder.uri, searchActivitiesAct, mss_cnt)
+
                 gactivities = send_message(msg, AgentActivitiesFinder.address)
-
-
 
                 return gactivities.serialize(format='xml'),200
 @app.route("/Stop")
